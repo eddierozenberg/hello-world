@@ -17,6 +17,7 @@ jobs:
     steps:
       - run: echo world
       - run: echo $myVariable
+      - run: echo $myVariable
 workflows:
   # Name the workflow "welcome"
   welcome:
