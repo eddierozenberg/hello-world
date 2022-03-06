@@ -30,7 +30,7 @@ jobs:
       - print_pipeline_id    
   job_to_fail:
      steps: 
-      -run: return 1 
+      -run: exit 1 
       -run:
           name: on error
           command: echo "Hello Error!"
