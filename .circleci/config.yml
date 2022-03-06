@@ -1,50 +1,34 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-commands:
-  print_pipeline_id:
-    steps:
-      - run: echo ${CIRCLE_WORKFLOW_ID}
+
 jobs:
-  save_hello_world_output:
+  build:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo "hello world" > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt           
-  print_world:
+      - checkout
+      - run: npm i
+      - run: npm run lint
+  test:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - attach_workspace:
-          at: ~/
-      - run: cat ~/output.txt
-      - run: echo $myVariable
-      - run: echo $myVariable
-  my_job:
+      - checkout
+      - run: npm i
+      - run: npm run test
+  analyze:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - print_pipeline_id    
-  job_to_fail:
-     docker:
-      - image: circleci/node:13.8.0
-     steps: 
-      - run: exit 1 
-      - run:
-          name: on error
-          command: echo "Hello Error!"
-          when: on_fail
+      - checkout
+      - run: npm audit
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  my_workflow:
     jobs:
-      - save_hello_world_output
-      - print_world:
+      - build
+      - test:
           requires:
-            - save_hello_world_output
-      - my_job
-      - job_to_fail
+            - build
+      - analyze:
+          requires:
+            - test
