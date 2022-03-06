@@ -28,6 +28,13 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - print_pipeline_id    
+  job_to_fail:
+     steps: 
+      -run: return 1 
+      -run:
+          name: on error
+          command: echo "Hello Error!"
+          when: on_fail
 workflows:
   # Name the workflow "welcome"
   welcome:
@@ -38,3 +45,4 @@ workflows:
           requires:
             - save_hello_world_output
       - my_job
+      - job_to_fail
