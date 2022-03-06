@@ -11,7 +11,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:     
       - persist_to_workspace:
-          root: /tmp
+          root: ~/
           paths:
              - output.txt        
       - run: echo "text to output here" > /tmp/output.txt       
@@ -19,10 +19,8 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-             - output.txt   
+      - attach_workspace:
+          root: ~/
       - run: echo `cat output.txt`
       - run: echo $myVariable
       - run: echo $myVariable
